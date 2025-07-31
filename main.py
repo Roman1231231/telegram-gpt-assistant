@@ -43,16 +43,16 @@ def webhook():
     if "message" in data:
         message = data["message"]
         chat_id = message["chat"]["id"]
+        text = message.get("text", "")
 
-        if "forward_from" in message or "forward_sender_name" in message:
-            original_text = message.get("text", "")
-            if original_text:
-                keyboard = {
-                    "inline_keyboard": [[
-                        {"text": key, "callback_data": f"{key}|{original_text}"}
-                    ] for key in STYLES.keys()]
-                }
-                send_message(chat_id, "Выберите стиль ответа:", reply_markup=keyboard)
+        if text:
+            keyboard = {
+                "inline_keyboard": [[
+                    {"text": key, "callback_data": f"{key}|{text}"}
+                ] for key in STYLES.keys()]
+            }
+            send_message(chat_id, "Выберите стиль ответа:", reply_markup=keyboard)
+
     elif "callback_query" in data:
         cq = data["callback_query"]
         chat_id = cq["message"]["chat"]["id"]
